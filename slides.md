@@ -1,5 +1,5 @@
 # Processing Large Geospatial Datasets
-
+## <i class="fa fa-rocket" aria-hidden="true"></i>
 ### Joana Simoes and Christian Rouffaert
 
 --
@@ -47,8 +47,8 @@ Note:
 <small>https://earthpulse.pt</small>
 ---
 ## Specific Problem
-- Identify areas of coverage (AoC) of telco antenas.
-- Transform a point cloud into a set of discrete surfaces (e.g.: polygons).
+- Identify areas of coverage (AoC) of telco antenas. <!-- .element: class="fragment fade-in-then-out"-->
+- Transform a point cloud into a set of discrete surfaces (e.g.: polygons). <!-- .element: class="fragment fade-in-then-out"-->
 
 ![corona](/images/few_clusters_trans.png)<!-- .element  width="55%" -->
 
@@ -69,8 +69,8 @@ Note:
 ---
 ### Wait, maybe we don't want to use all the points!
 
-- Some points are outliers.
-- We are only interested in identifying the **high-density** areas.
+- Some points are outliers. <!-- .element : class="fragment"-->
+- We are only interested in identifying the high-density areas. <!-- .element: class="fragment"-->
 
 ![corona](/images/big_run2.png)<!-- .element  width="80%" -->
 
@@ -102,7 +102,7 @@ Note:
 ## Tech Approach <i class="fa fa-database" aria-hidden="true"></i>
 
 - We are dealing with a large volume of data, so it is not really feasible to hold it in memory.
-- Databases are capable of storing and managing large amounts of data.
+- Databases are capable of storing and managing large amounts of data.<!-- .element: class="fragment"-->
 
 ---
 
@@ -154,20 +154,30 @@ Note:
 ## Deployment <i class="fa fa-cloud" aria-hidden="true"></i>
 
 - To run this at scale, the container orchestration was deployed on AWS.
+- The use of cloud servers, enabled us to run jobs in parallel.
+- Docker made it really easy to deploy the application in different servers.
 
 ![corona](/images/aws_logo_179x109.gif)<!-- .element  width="30%" --> 
 
 Note:
 - TODO: speak about which machines were created, and how long it took them to run.
+- We split the batch jobs for each area code
+- Machines 16GB 32GB
+- Job structure: process a bulk of files which contains one file, per area code
+- When you need to process a large volume of data in a short period of time, cloud is a must
+- The hardware was not so much an issue, but the number of servers was.
 
 --
 ## Results
 
+![corona](/images/minpts_25b.png)<!-- .element  width="80%" --> 
 
-![corona](/images/minpts_25b.png)
+The output was written in OGC WKT format.
 
 Note:
 - Say something about the results
+- Interoperability
+- Say something about the size of the original dataset and how long it took to run
 
 --
 ## Next Steps
@@ -176,11 +186,31 @@ Note:
 ![corona](/images/api.png)<!-- .element  width="80%" --> 
 
 --
-## Final Thoughts
+## Lessons Learned
+- When you process at scale, memory bugs are taken to an unprecedent level.<!-- .element: class="fragment fade-in-then-semi-out"-->
+- Small tweaks have a great impact on the performance.<!-- .element: class="fragment fade-in-then-semi-out"-->
+- Bulk processing: the art of split and merge.<!-- .element: class="fragment fade-in-then-semi-out"-->
+- Monitor everything.<!-- .element: class="fragment fade-in-then-semi-out"-->
+- Check the outputs in a GIS.<!-- .element: class="fragment fade-in-then-semi-out"-->
+- Try to tune the parameters in small scale experiments.<!-- .element: class="fragment fade-in-then-semi-out"-->
 
-TODO: Some lessons learned here
+Note:
+- processing large amounts of data: it is hard to debug
+- Let's say that we have a bug, that at each iteration is eating a small amount of memory. This can grow to a point that will eat all the RAM memory of the machine and cause it fail.
+- If we can avoid clustering sets with less than x points
+- There is a delicate balance here: we want to run batch jobs to decrease the amount of human intervention, but this also decreases our chance of intervention in case of errors.
+- Generate detail logs through the application, in order to understand what happened in case of failure. This allows you to go back to a GIS and check what happened. Also monitor the hardware.
+- It is not really easy to understand what is going on here, withour any visual queues.
+- It is not always possible to tune the paramaeters in small scale experiments, because you dont have the scale and diversity of situations that you do with the real dataset.
+- The use of spatial indexes in the tables is a must.
 
 --
+
+- PostGIS performed really well for this use case, even considering an iterative method such as DBSCAN.
+
+![corona](/images/postgis.png)<!-- .element  width="25%" --> 
+
+
 --
 ## Thank you!
 ### We would love to <i class="fa fa-bullhorn" aria-hidden="true"></i> from you
