@@ -6,7 +6,7 @@
 ![corona](/images/teragence-hres-pad.png)<!-- .element  width="50%" -->
 
 
-- UK based company, operating in the field of network analytics.
+- UK based company, operating in the field of crowdsourcing and network analytics.
 
 <small>https://www.teragence.com/</small>
 ---
